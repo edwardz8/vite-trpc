@@ -24,6 +24,11 @@ app.use(cors({}))
 const createContext = ({ req, res }: trpcExpress.CreateExpressContextOptions) => ({})
 
 const apiRouter = trpc.router()
+    .query('', {
+        async resolve(req) {
+            return 'trpc route'
+        }
+    })
     .query('getUsers', {
         input: z.undefined(),
         async resolve(req) {
@@ -41,6 +46,11 @@ const apiRouter = trpc.router()
     })
 
 app.use('/trpc', trpcExpress.createExpressMiddleware({
+    router: apiRouter,
+    createContext
+}))
+
+app.use('/', trpcExpress.createExpressMiddleware({
     router: apiRouter,
     createContext
 }))
